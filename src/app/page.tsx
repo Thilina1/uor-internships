@@ -7,29 +7,29 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
       <section className="relative flex flex-col items-center justify-center overflow-hidden py-24 md:py-32 lg:py-40">
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0 text-balance">
           <img
             src="/site-image.JPG"
             alt="University of Ruhuna"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-white/70 dark:bg-background/60 md:bg-white/50 dark:md:bg-background/40 backdrop-blur-[1px]" />
+          <div className="absolute inset-0 bg-white/80 dark:bg-zinc-950/80 md:bg-white/60 dark:md:bg-zinc-950/50 backdrop-blur-[2px]" />
         </div>
 
         <div className="container relative z-10 px-4 md:px-6 flex flex-col items-center text-center space-y-8">
-          <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-medium text-primary bg-background/50 backdrop-blur-sm">
-            <span className="flex h-2 w-2 rounded-full bg-primary mr-2"></span>
+          <div className="inline-flex items-center rounded-full border border-primary/20 bg-background/80 px-3 py-1 text-sm font-medium text-primary backdrop-blur-sm shadow-sm">
+            <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse"></span>
             UOR Faculty of Technology
           </div>
 
-          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl max-w-4xl text-slate-900 dark:text-white drop-shadow-sm dark:drop-shadow-md">
+          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl max-w-4xl text-foreground drop-shadow-sm">
             Launch Your Career with the Perfect{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600 dark:to-blue-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-600 to-indigo-600 dark:from-primary dark:to-blue-400">
               Internship
             </span>
           </h1>
 
-          <p className="max-w-[42rem] leading-normal text-slate-800 dark:text-white/90 sm:text-xl sm:leading-8 font-medium drop-shadow-sm dark:drop-shadow-md">
+          <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8 font-medium text-balance">
             Connect with alumni, academic staff, and top companies. Apply for exclusive opportunities and kickstart your professional journey right from your campus.
           </p>
 
@@ -53,32 +53,32 @@ export default function Home() {
       <section className="py-20 bg-muted/50">
         <div className="container px-4 md:px-6">
           <div className="grid gap-12 lg:grid-cols-3">
-            <div className="flex flex-col items-center text-center space-y-4 p-6 bg-background rounded-2xl shadow-sm border border-border/50 transition-all hover:shadow-md hover:border-primary/50">
-              <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+            <div className="flex flex-col items-center text-center space-y-4 p-8 bg-card rounded-2xl shadow-sm border border-border/50 transition-all hover:shadow-md hover:border-primary/50 hover:-translate-y-1">
+              <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center text-primary shadow-inner">
                 <GraduationCap className="h-8 w-8" />
               </div>
-              <h3 className="text-xl font-bold">For Undergraduates</h3>
-              <p className="text-muted-foreground">
+              <h3 className="text-xl font-bold italic tracking-tight">For Undergraduates</h3>
+              <p className="text-muted-foreground leading-relaxed">
                 Create your profile, showcase your skills, and easily apply to multiple internships tailored for FOT students.
               </p>
             </div>
 
-            <div className="flex flex-col items-center text-center space-y-4 p-6 bg-background rounded-2xl shadow-sm border border-border/50 transition-all hover:shadow-md hover:border-primary/50">
-              <div className="h-16 w-16 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500">
+            <div className="flex flex-col items-center text-center space-y-4 p-8 bg-card rounded-2xl shadow-sm border border-border/50 transition-all hover:shadow-md hover:border-blue-500/50 hover:-translate-y-1">
+              <div className="h-16 w-16 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500 shadow-inner">
                 <Building2 className="h-8 w-8" />
               </div>
-              <h3 className="text-xl font-bold">For Companies</h3>
-              <p className="text-muted-foreground">
+              <h3 className="text-xl font-bold italic tracking-tight">For Companies</h3>
+              <p className="text-muted-foreground leading-relaxed">
                 Post opportunities, manage applications, and discover the brightest upcoming tech talent from the university.
               </p>
             </div>
 
-            <div className="flex flex-col items-center text-center space-y-4 p-6 bg-background rounded-2xl shadow-sm border border-border/50 transition-all hover:shadow-md hover:border-primary/50">
-              <div className="h-16 w-16 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-500">
+            <div className="flex flex-col items-center text-center space-y-4 p-8 bg-card rounded-2xl shadow-sm border border-border/50 transition-all hover:shadow-md hover:border-indigo-500/50 hover:-translate-y-1">
+              <div className="h-16 w-16 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-500 shadow-inner">
                 <Briefcase className="h-8 w-8" />
               </div>
-              <h3 className="text-xl font-bold">Seamless Process</h3>
-              <p className="text-muted-foreground">
+              <h3 className="text-xl font-bold italic tracking-tight">Seamless Process</h3>
+              <p className="text-muted-foreground leading-relaxed">
                 A streamlined platform bridging the gap between university talent and industry needs. Easily view or post internship opportunities in one centralized system.
               </p>
             </div>

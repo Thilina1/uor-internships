@@ -49,12 +49,6 @@ export default function LoginPage() {
                 <div className="absolute inset-0 bg-background/50 dark:bg-background/80 backdrop-blur-[2px]" />
             </div>
 
-            <Link
-                href="/"
-                className="absolute z-10 left-4 top-6 md:left-8 md:top-8 text-sm font-medium text-slate-800 dark:text-slate-200 hover:text-primary transition-colors flex items-center gap-1 bg-background/60 px-3 py-1.5 rounded-full backdrop-blur-md border border-border/50 shadow-sm"
-            >
-                <span>&larr;</span> Back to Home
-            </Link>
 
             <div className="relative z-10 mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px] p-8 rounded-2xl border bg-card/95 backdrop-blur-sm shadow-xl shadow-primary/10">
                 <div className="flex flex-col space-y-2 text-center">
