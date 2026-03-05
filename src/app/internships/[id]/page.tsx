@@ -78,20 +78,20 @@ export default async function InternshipDetailsPage({
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-background pb-20">
             {/* Themed Header Banner */}
-            <div className="relative w-full h-[35vh] md:h-[40vh] bg-gradient-to-r from-[#01a9e0] to-[#047baa] overflow-hidden">
-                <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }}></div>
+            <div className="relative w-full h-[35vh] md:h-[40vh] bg-blue-50 dark:bg-zinc-950 overflow-hidden border-b border-blue-100/50 dark:border-border">
+                <div className="absolute inset-0 opacity-10 dark:opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #01a9e0 1px, transparent 0)', backgroundSize: '32px 32px' }}></div>
 
                 <Link
                     href="/internships"
-                    className="absolute top-6 left-6 md:top-10 md:left-10 z-10 flex items-center justify-center w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full text-white transition-colors"
+                    className="absolute top-6 left-6 md:top-10 md:left-10 z-10 flex items-center justify-center w-12 h-12 bg-white/80 dark:bg-white/10 hover:bg-white/90 dark:hover:bg-white/20 backdrop-blur-md rounded-full text-slate-900 dark:text-white border border-slate-200 dark:border-transparent transition-colors shadow-sm"
                 >
                     <ArrowLeft className="w-6 h-6" />
                 </Link>
 
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4 md:px-8 -translate-y-[4vh]">
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 md:px-8 -translate-y-[4vh]">
                     <div className="max-w-4xl mx-auto">
-                        <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-3 drop-shadow-md">{job.title}</h1>
-                        <p className="text-lg md:text-2xl font-medium opacity-90 drop-shadow-sm">{job.profiles?.name}</p>
+                        <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-3 text-slate-900 dark:text-white">{job.title}</h1>
+                        <p className="text-lg md:text-2xl font-bold text-primary dark:text-primary/90">{job.profiles?.name}</p>
                     </div>
                 </div>
             </div>
