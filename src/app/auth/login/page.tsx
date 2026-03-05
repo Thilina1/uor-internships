@@ -40,7 +40,7 @@ export default function LoginPage() {
 
     return (
         <div className="relative flex min-h-[calc(100vh-64px)] w-screen flex-col items-center justify-center py-10">
-            <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 z-0 hidden md:block">
                 <img
                     src="/login.webp"
                     alt="Background"

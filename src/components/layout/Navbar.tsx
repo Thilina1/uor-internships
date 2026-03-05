@@ -35,7 +35,7 @@ export function Navbar() {
     };
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="sticky top-0 z-50 w-full border-b bg-background shadow-sm">
             <div className="container flex h-16 items-center justify-between">
                 <Link href="/" className="flex items-center space-x-2">
                     <span className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-500">
@@ -46,7 +46,7 @@ export function Navbar() {
                     {user && (
                         <Link
                             href="/internships"
-                            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hidden md:flex items-center gap-1"
+                            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground flex items-center gap-1"
                         >
                             <Briefcase className="h-4 w-4" />
                             Browse
