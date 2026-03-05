@@ -136,11 +136,11 @@ export default function ResetPasswordPage() {
                     alt="Background"
                     className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-background/50 dark:bg-background/80 backdrop-blur-[2px]" />
+                <div className="absolute inset-0 bg-white/40 dark:bg-zinc-950/60 backdrop-blur-[2px]" />
             </div>
 
 
-            <div className="relative z-10 mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[400px] p-8 rounded-2xl border bg-card/95 backdrop-blur-sm shadow-xl shadow-primary/10">
+            <div className="relative z-10 mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[400px] p-8 rounded-2xl border bg-card shadow-xl shadow-primary/10">
                 <div className="flex flex-col space-y-2 text-center">
                     <h1 className="text-2xl font-semibold tracking-tight">
                         Create New Password
