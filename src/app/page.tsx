@@ -5,9 +5,6 @@ import { ArrowRight, Briefcase, GraduationCap, Building2 } from "lucide-react";
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="bg-red-600 text-white text-center py-2 text-xs font-bold uppercase tracking-widest z-[100]">
-        Custom Landing Page Active
-      </div>
       {/* Hero Section */}
       <section className="relative flex flex-col items-center justify-center overflow-hidden py-24 md:py-32 lg:py-40">
         <div className="absolute inset-0 z-0">
