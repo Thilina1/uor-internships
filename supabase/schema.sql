@@ -58,7 +58,10 @@ alter table public.profiles disable row level security;
 alter table public.internships disable row level security;
 alter table public.applications disable row level security;
 
+
+
 -- 2. Internships Table
+
 create table if not exists public.internships (
   id uuid default uuid_generate_v4() primary key,
   company_id uuid references public.profiles(id) on delete cascade not null,
