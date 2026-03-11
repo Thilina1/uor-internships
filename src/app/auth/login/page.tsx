@@ -26,7 +26,9 @@ export default function LoginPage() {
 
             if (result.error) throw new Error(result.error);
 
-            if (result.role === "alumni" || result.role === "lecturer" || result.role === "external") {
+            if (result.role === "admin") {
+                router.push("/dashboard/admin");
+            } else if (result.role === "alumni" || result.role === "lecturer" || result.role === "external") {
                 router.push("/dashboard/member");
             } else if (result.role === "student") {
                 router.push("/internships");
@@ -70,7 +72,7 @@ export default function LoginPage() {
                                 <Input
                                     id="email"
                                     placeholder="name@example.com"
-                                    type="email"
+                                    type="text"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required

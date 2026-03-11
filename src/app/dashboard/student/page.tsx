@@ -106,6 +106,54 @@ export default async function StudentDashboard() {
             </div>
 
             <div className="space-y-12">
+                {/* Applications Section */}
+                <section className="space-y-6">
+                    <h2 className="text-2xl font-bold">Your Applications</h2>
+                    {applications && applications.length > 0 ? (
+                        <div className="grid gap-4">
+                            {applications.map((app: any) => (
+                                <div key={app.id} className="p-6 rounded-2xl border bg-card/50 hover:bg-card hover:border-primary/30 transition-all flex flex-col md:flex-row md:items-center justify-between shadow-sm gap-4">
+                                    <div className="flex items-center gap-4">
+                                        <div className="h-12 w-12 rounded-lg bg-muted flex items-center justify-center overflow-hidden flex-shrink-0 border">
+                                            {app.internships.image_url ? (
+                                                <img src={app.internships.image_url} alt={app.internships.title} className="h-full w-full object-cover" />
+                                            ) : (
+                                                <Briefcase className="h-6 w-6 text-muted-foreground" />
+                                            )}
+                                        </div>
+                                        <div>
+                                            <h3 className="font-bold text-lg">{app.internships.title}</h3>
+                                            <p className="text-sm text-muted-foreground">
+                                                {app.internships.profiles?.name} &bull; Applied on {new Date(app.created_at).toLocaleDateString()}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-4 justify-between md:justify-end">
+                                        <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider ${getStatusColor(app.status)}`}>
+                                            {getStatusIcon(app.status)}
+                                            {app.status}
+                                        </div>
+                                        <Link href={`/internships/${app.internships.id}`}>
+                                            <Button variant="secondary" size="sm">View Post</Button>
+                                        </Link>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="text-center py-20 rounded-3xl border border-dashed flex flex-col items-center justify-center space-y-4">
+                            <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center cursor-default">
+                                <Clock className="h-8 w-8 text-muted-foreground" />
+                            </div>
+                            <div className="max-w-xs mx-auto">
+                                <p className="font-medium">No applications yet</p>
+                                <p className="text-sm text-muted-foreground mt-1">Ready to start your career? Browse internships and submit your first application!</p>
+                            </div>
+                        </div>
+                    )}
+                </section>
+
                 {/* Saved Jobs Section */}
                 <section className="space-y-6">
                     <h2 className="text-2xl font-bold">Saved Job Posts</h2>

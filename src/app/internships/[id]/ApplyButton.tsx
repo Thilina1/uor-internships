@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
     Dialog,
     DialogContent,
@@ -18,14 +17,15 @@ import { Loader2, UploadCloud } from "lucide-react";
 
 export function ApplyButton({
     internshipId,
-    isLoggedIn
+    isLoggedIn,
+    driveFolderId
 }: {
     internshipId: string;
     isLoggedIn: boolean;
+    driveFolderId?: string;
 }) {
     const [isOpen, setIsOpen] = useState(false);
     const [cvFile, setCvFile] = useState<File | null>(null);
-    const [coverLetter, setCoverLetter] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
@@ -49,10 +49,11 @@ export function ApplyButton({
 
         try {
             const { getUser } = await import("@/lib/auth/actions");
+            const { uploadFileToGoogleDrive } = await import("@/lib/google-drive/actions");
             const user = await getUser();
             if (!user) throw new Error("Not authenticated");
 
-            // 1. Upload CV
+            // 1. Upload CV to Supabase Storage
             const fileExt = cvFile.name.split('.').pop();
             const fileName = `${user.id}-${Math.random()}.${fileExt}`;
             const filePath = `${fileName}`;
@@ -63,12 +64,32 @@ export function ApplyButton({
 
             if (uploadError) throw uploadError;
 
-            // Get public URL
             const { data: { publicUrl } } = supabase.storage
                 .from('resumes')
                 .getPublicUrl(filePath);
 
-            // 2. Insert application record
+            // 2. Upload to Google Drive if driveFolderId is provided
+            if (driveFolderId) {
+                console.log("Found Drive Folder ID for internship:", driveFolderId);
+                const formData = new FormData();
+                formData.append('file', cvFile);
+                const driveResult = await uploadFileToGoogleDrive(
+                    formData,
+                    driveFolderId,
+                    `${user.name || user.id} - CV.${fileExt}`
+                );
+                if (driveResult.success) {
+                    console.log("Successfully mirrored CV to Google Drive:", driveResult.fileId);
+                } else {
+                    console.error("Mirror to Google Drive Failed:", driveResult.error);
+                    // We don't throw here to avoid blocking the main application if Drive fails
+                    // but we could notify the user or log it for admin review.
+                }
+            } else {
+                console.log("No specific Google Drive folder ID found for this internship. Skipping Mirror.");
+            }
+
+            // 3. Insert application record
             const { error: applyError } = await supabase
                 .from("applications")
                 .insert({
@@ -76,13 +97,12 @@ export function ApplyButton({
                     student_id: user.id,
                     status: "pending",
                     cv_url: publicUrl,
-                    cover_letter: coverLetter,
                 });
 
             if (applyError) throw applyError;
 
             setIsOpen(false);
-            router.refresh(); // Refresh page to show "Already Applied"
+            router.refresh();
         } catch (err: any) {
             setError(err.message || "Failed to apply");
         } finally {
@@ -94,7 +114,7 @@ export function ApplyButton({
         return (
             <Button
                 onClick={() => router.push("/auth/login")}
-                className="w-full py-6 text-lg font-bold"
+                className="w-full h-16 text-xl bg-primary hover:bg-primary/90 text-white rounded-2xl shadow-xl shadow-primary/20 font-black"
             >
                 Log in to Apply
             </Button>
@@ -104,7 +124,7 @@ export function ApplyButton({
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button className="w-full py-6 text-lg font-bold">
+                <Button className="w-full h-16 text-xl bg-primary hover:bg-primary/90 text-white rounded-2xl shadow-xl shadow-primary/20 font-black transition-all hover:scale-[1.02] active:scale-[0.98]">
                     Apply Now
                 </Button>
             </DialogTrigger>
@@ -112,7 +132,7 @@ export function ApplyButton({
                 <DialogHeader>
                     <DialogTitle>Submit Your Application</DialogTitle>
                     <DialogDescription>
-                        Please provide your CV and a brief cover letter for this internship.
+                        Please provide your CV for this internship. It will be uploaded for the employer to review.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -121,25 +141,22 @@ export function ApplyButton({
                         <label className="text-sm font-semibold">
                             Resume / CV (PDF, DOC, DOCX) <span className="text-destructive">*</span>
                         </label>
-                        <div className="flex items-center gap-4">
+                        <div className="relative border-2 border-dashed border-muted-foreground/20 rounded-2xl p-6 hover:bg-accent/50 hover:border-primary/50 transition-all text-center group">
+                            <UploadCloud className="mx-auto h-8 w-8 text-muted-foreground group-hover:text-primary mb-2" />
+                            <p className="text-sm text-balance mb-2 font-medium">Click to select or drag and drop your CV</p>
                             <Input
                                 type="file"
-                                accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                accept=".pdf,.doc,.docx"
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCvFile(e.target.files?.[0] || null)}
-                                className="cursor-pointer file:text-primary file:font-semibold flex-1"
+                                className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                                 required
                             />
+                            {cvFile && (
+                                <div className="mt-2 text-primary font-bold text-sm bg-primary/10 py-2 rounded-lg">
+                                    Selected: {cvFile.name}
+                                </div>
+                            )}
                         </div>
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="text-sm font-semibold">Cover Letter</label>
-                        <Textarea
-                            placeholder="Why are you a good fit for this role?"
-                            rows={5}
-                            value={coverLetter}
-                            onChange={(e) => setCoverLetter(e.target.value)}
-                        />
                     </div>
 
                     {error && (
@@ -150,16 +167,16 @@ export function ApplyButton({
 
                     <Button
                         type="submit"
-                        className="w-full font-bold"
+                        className="w-full h-14 text-lg bg-primary hover:bg-primary/90 text-white rounded-xl shadow-lg font-bold transition-all"
                         disabled={isLoading || !cvFile}
                     >
                         {isLoading ? (
                             <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Submitting...
+                                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                                Processing Application...
                             </>
                         ) : (
-                            "Submit Application"
+                            "Submit my Application"
                         )}
                     </Button>
                 </form>

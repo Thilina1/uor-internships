@@ -43,7 +43,7 @@ export function Navbar() {
                     </span>
                 </Link>
                 <nav className="flex items-center gap-6">
-                    {user && (
+                    {user && role !== "admin" && (
                         <Link
                             href="/internships"
                             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground flex items-center gap-1"
@@ -54,15 +54,17 @@ export function Navbar() {
                     )}
 
                     <div className="flex items-center gap-3">
-                        <ThemeToggle />
+                        {role !== "admin" && <ThemeToggle />}
                         {user ? (
                             <>
-                                <Link href={role === "student" ? "/dashboard/student" : "/dashboard/member"}>
-                                    <Button variant="ghost" size="sm" className="gap-2">
-                                        <LayoutDashboard className="h-4 w-4" />
-                                        <span className="hidden sm:inline">Dashboard</span>
-                                    </Button>
-                                </Link>
+                                {role !== "admin" && (
+                                    <Link href={role === "student" ? "/dashboard/student" : "/dashboard/member"}>
+                                        <Button variant="ghost" size="sm" className="gap-2">
+                                            <LayoutDashboard className="h-4 w-4" />
+                                            <span className="hidden sm:inline">Dashboard</span>
+                                        </Button>
+                                    </Link>
+                                )}
                                 <Button variant="outline" size="sm" onClick={handleLogout} className="gap-2 text-destructive hover:bg-destructive/10">
                                     <LogOut className="h-4 w-4" />
                                     <span className="hidden sm:inline">Logout</span>

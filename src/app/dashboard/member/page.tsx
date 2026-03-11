@@ -18,9 +18,10 @@ export default async function MemberDashboard({
         redirect("/auth/login");
     }
 
-    if (user.role === "student") {
-        redirect("/");
-    }
+    // Students can now access dashboard to manage their posts
+    // if (user.role === "student") {
+    //     redirect("/");
+    // }
 
     const resolvedSearchParams = await searchParams;
     const page = typeof resolvedSearchParams?.page === "string" ? parseInt(resolvedSearchParams.page) : 1;

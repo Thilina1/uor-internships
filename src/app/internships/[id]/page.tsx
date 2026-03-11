@@ -82,7 +82,7 @@ export default async function InternshipDetailsPage({
                 <div className="absolute inset-0 opacity-10 dark:opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #01a9e0 1px, transparent 0)', backgroundSize: '32px 32px' }}></div>
 
                 <Link
-                    href="/internships"
+                    href={userRole === "admin" ? "/dashboard/admin" : "/internships"}
                     className="absolute top-6 left-6 md:top-10 md:left-10 z-10 flex items-center justify-center w-12 h-12 bg-white/80 dark:bg-white/10 hover:bg-white/90 dark:hover:bg-white/20 backdrop-blur-md rounded-full text-slate-900 dark:text-white border border-slate-200 dark:border-transparent transition-colors shadow-sm"
                 >
                     <ArrowLeft className="w-6 h-6" />
@@ -105,14 +105,20 @@ export default async function InternshipDetailsPage({
                         {/* Title and tags for Mobile/Desktop inner */}
                         <div className="space-y-3">
                             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 pt-2 md:pt-0">
-                                <div className="flex items-center text-sm font-medium text-slate-600 dark:text-slate-400">
+                                <div className="flex items-center text-sm font-medium text-slate-500 dark:text-slate-400">
                                     <Clock className="w-4 h-4 mr-1.5" />
-                                    Posted {new Date(job.created_at).toLocaleDateString()}
+                                    Posted on {new Date(job.created_at).toLocaleDateString()}
                                 </div>
-                                <div className="flex items-center text-sm font-medium text-slate-600 dark:text-slate-400">
-                                    <Navigation className="w-4 h-4 mr-1.5 text-primary" />
-                                    {job.job_type || "Full Time / Internship"}
+                                <div className="flex items-center text-sm font-medium px-3 py-1 bg-primary/10 text-primary rounded-full">
+                                    <Navigation className="w-4 h-4 mr-1.5" />
+                                    {job.job_type || "Internship"}
                                 </div>
+                                {job.is_internal && (
+                                    <div className="flex items-center text-sm font-medium px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full">
+                                        <CheckCircle className="w-4 h-4 mr-1.5" />
+                                        Internal Application
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -189,7 +195,7 @@ export default async function InternshipDetailsPage({
 
                             <div className="sticky top-24 space-y-4">
                                 <div className="bg-white dark:bg-card border dark:border-border rounded-2xl p-6 shadow-sm flex flex-col gap-4">
-                                    {(user.role === "admin" || job.company_id === user.id) && (
+                                    {(job.company_id === user.id) && (
                                         <Link href={`/dashboard/member/edit/${job.id}`} className="w-full">
                                             <Button variant="outline" className="w-full h-12 text-md border-primary text-primary hover:bg-primary/10 rounded-xl font-bold mb-2">
                                                 Edit Internship
@@ -198,18 +204,30 @@ export default async function InternshipDetailsPage({
                                     )}
                                     {job.external_url ? (
                                         <Link href={job.external_url} target="_blank" rel="noopener noreferrer" className="w-full">
-                                            <Button className="w-full h-14 text-lg bg-[#01a9e0] hover:bg-[#008fbf] text-white rounded-xl shadow-lg shadow-[#01a9e0]/20 font-bold">
+                                            <Button className="w-full h-14 text-lg bg-gradient-to-r from-[#01a9e0] to-blue-600 hover:shadow-lg hover:shadow-primary/20 transition-all text-white rounded-xl font-bold">
                                                 View Original Post
                                             </Button>
                                         </Link>
                                     ) : (
-                                        <Button className="w-full h-14 text-lg bg-slate-100 text-slate-400 border-none pointer-events-none rounded-xl dark:bg-muted/50 font-bold">
-                                            No External Link
-                                        </Button>
+                                        hasApplied ? (
+                                            <div className="w-full h-16 flex flex-col items-center justify-center bg-green-50 dark:bg-green-900/10 text-green-600 dark:text-green-400 rounded-2xl border-2 border-green-200/50 dark:border-green-800/30 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                                <div className="flex items-center gap-2 font-black text-lg">
+                                                    <CheckCircle className="h-6 w-6" />
+                                                    Application Sent
+                                                </div>
+                                                <p className="text-[10px] uppercase tracking-widest font-bold opacity-70">Check your dashboard for updates</p>
+                                            </div>
+                                        ) : (
+                                            <ApplyButton
+                                                internshipId={job.id}
+                                                isLoggedIn={!!user}
+                                                driveFolderId={job.drive_folder_id}
+                                            />
+                                        )
                                     )}
                                     <SaveJobButton
                                         internshipId={job.id}
-                                        initialIsSaved={hasSaved} // True if they previously saved this job
+                                        initialIsSaved={hasSaved}
                                         isLoggedIn={!!user}
                                     />
                                 </div>

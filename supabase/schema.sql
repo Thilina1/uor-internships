@@ -68,11 +68,14 @@ create table if not exists public.internships (
   image_url text,
   external_url text,
   expires_at timestamp with time zone,
-  status text default 'open',
+  status text default 'pending',
   job_type text,
   experience_level text,
   education_skills text,
   summary text,
+  is_internal boolean default false,
+  drive_url text,
+  drive_folder_id text,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
@@ -108,6 +111,8 @@ create table if not exists public.applications (
   student_id uuid references public.profiles(id) on delete cascade not null,
   internship_id uuid references public.internships(id) on delete cascade not null,
   status text default 'pending', -- 'pending', 'accepted', 'rejected'
+  cv_url text,
+  cover_letter text,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   unique (student_id, internship_id)
 );
