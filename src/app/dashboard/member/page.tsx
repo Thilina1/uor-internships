@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
-import { Plus, Briefcase, Users, Clock, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, Briefcase, Users, Clock, ChevronLeft, ChevronRight, FolderOpen } from "lucide-react";
 
 import { getSession } from "@/lib/auth/session";
 
@@ -99,7 +99,17 @@ export default async function MemberDashboard({
                                         )}
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-lg">{job.title}</h3>
+                                        <div className="flex items-center gap-2">
+                                            <h3 className="font-bold text-lg">{job.title}</h3>
+                                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${job.status === 'open'
+                                                ? 'bg-green-100 text-green-700 border border-green-200'
+                                                : job.status === 'pending'
+                                                    ? 'bg-amber-100 text-amber-700 border border-amber-200'
+                                                    : 'bg-red-100 text-red-700 border border-red-200'
+                                                }`}>
+                                                {job.status}
+                                            </span>
+                                        </div>
                                         <p className="text-sm text-muted-foreground">
                                             Posted on {new Date(job.created_at).toLocaleDateString()} &bull; {job.applications?.[0]?.count || 0} applicants
                                         </p>
@@ -112,8 +122,22 @@ export default async function MemberDashboard({
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
+                                    {job.drive_url && (
+                                        <a href={job.drive_url} target="_blank" rel="noopener noreferrer">
+                                            <Button variant="outline" size="sm" className="gap-2 border-primary/20 hover:bg-primary/5 text-primary">
+                                                <FolderOpen className="h-4 w-4" />
+                                                <span className="hidden sm:inline">View Folder</span>
+                                            </Button>
+                                        </a>
+                                    )}
                                     <Link href={`/dashboard/member/edit/${job.id}`}>
                                         <Button variant="ghost" size="sm">Edit</Button>
+                                    </Link>
+                                    <Link href={`/dashboard/member/applicants?id=${job.id}`}>
+                                        <Button size="sm" className="gap-2">
+                                            <Users className="h-4 w-4" />
+                                            Applicants
+                                        </Button>
                                     </Link>
                                 </div>
                             </div>

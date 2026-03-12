@@ -46,6 +46,17 @@ export default async function InternshipDetailsPage({
     }
 
     const user = session.user;
+
+    // Security check for non-open jobs
+    if (jobRaw.status !== "open") {
+        const isAdmin = user.role === "admin";
+        const isOwner = jobRaw.company_id === user.id;
+
+        if (!isAdmin && !isOwner) {
+            notFound();
+        }
+    }
+
     let hasApplied = false;
     let hasSaved = false;
     let userRole = user?.role || "";
@@ -202,41 +213,47 @@ export default async function InternshipDetailsPage({
                                             </Button>
                                         </Link>
                                     )}
-                                    {job.external_url ? (
-                                        <Link href={job.external_url} target="_blank" rel="noopener noreferrer" className="w-full">
-                                            <Button className="w-full h-14 text-lg bg-gradient-to-r from-[#01a9e0] to-blue-600 hover:shadow-lg hover:shadow-primary/20 transition-all text-white rounded-xl font-bold">
-                                                View Original Post
-                                            </Button>
-                                        </Link>
-                                    ) : (
-                                        hasApplied ? (
-                                            <div className="w-full h-16 flex flex-col items-center justify-center bg-green-50 dark:bg-green-900/10 text-green-600 dark:text-green-400 rounded-2xl border-2 border-green-200/50 dark:border-green-800/30 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                                                <div className="flex items-center gap-2 font-black text-lg">
-                                                    <CheckCircle className="h-6 w-6" />
-                                                    Application Sent
-                                                </div>
-                                                <p className="text-[10px] uppercase tracking-widest font-bold opacity-70">Check your dashboard for updates</p>
-                                            </div>
+                                    {userRole !== "admin" && (
+                                        job.external_url ? (
+                                            <Link href={job.external_url} target="_blank" rel="noopener noreferrer" className="w-full">
+                                                <Button className="w-full h-14 text-lg bg-gradient-to-r from-[#01a9e0] to-blue-600 hover:shadow-lg hover:shadow-primary/20 transition-all text-white rounded-xl font-bold">
+                                                    View Original Post
+                                                </Button>
+                                            </Link>
                                         ) : (
-                                            <ApplyButton
-                                                internshipId={job.id}
-                                                isLoggedIn={!!user}
-                                                driveFolderId={job.drive_folder_id}
-                                            />
+                                            hasApplied ? (
+                                                <div className="w-full h-16 flex flex-col items-center justify-center bg-green-50 dark:bg-green-900/10 text-green-600 dark:text-green-400 rounded-2xl border-2 border-green-200/50 dark:border-green-800/30 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                                    <div className="flex items-center gap-2 font-black text-lg">
+                                                        <CheckCircle className="h-6 w-6" />
+                                                        Application Sent
+                                                    </div>
+                                                    <p className="text-[10px] uppercase tracking-widest font-bold opacity-70">Check your dashboard for updates</p>
+                                                </div>
+                                            ) : (
+                                                <ApplyButton
+                                                    internshipId={job.id}
+                                                    isLoggedIn={!!user}
+                                                    driveFolderId={job.drive_folder_id}
+                                                />
+                                            )
                                         )
                                     )}
-                                    <SaveJobButton
-                                        internshipId={job.id}
-                                        initialIsSaved={hasSaved}
-                                        isLoggedIn={!!user}
-                                    />
+                                    {userRole !== "admin" && (
+                                        <SaveJobButton
+                                            internshipId={job.id}
+                                            initialIsSaved={hasSaved}
+                                            isLoggedIn={!!user}
+                                        />
+                                    )}
                                 </div>
 
-                                <div className="bg-slate-50 dark:bg-muted/30 rounded-2xl p-6 border border-slate-100 dark:border-border">
-                                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-4 text-center">
-                                        Share this job and help your fellow undergraduates find the perfect opportunity!
-                                    </p>
-                                </div>
+                                {userRole !== "admin" && (
+                                    <div className="bg-slate-50 dark:bg-muted/30 rounded-2xl p-6 border border-slate-100 dark:border-border">
+                                        <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-4 text-center">
+                                            Share this job and help your fellow undergraduates find the perfect opportunity!
+                                        </p>
+                                    </div>
+                                )}
                             </div>
 
                         </div>

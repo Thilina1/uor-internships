@@ -117,6 +117,7 @@ export default function NewInternshipPage() {
                 is_internal: isInternal,
                 drive_url: driveUrl,
                 drive_folder_id: driveFolderId,
+                status: "pending",
             };
 
             if (externalUrl) {

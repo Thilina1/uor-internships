@@ -33,10 +33,12 @@ export default async function InternshipsPage({
 
     const supabase = await createClient();
 
+    const now = new Date().toISOString();
     let query = supabase
         .from("internships")
         .select("*", { count: "exact" })
         .eq("status", "open")
+        .or(`expires_at.gt.${now},expires_at.is.null`)
         .order("created_at", { ascending: false });
 
     if (q) {
@@ -48,10 +50,12 @@ export default async function InternshipsPage({
 
         const matchingCompanyIds = matchingProfiles?.map(p => p.id) || [];
 
+        const searchFields = `title.ilike.%${q}%,description.ilike.%${q}%,requirements.ilike.%${q}%`;
+
         if (matchingCompanyIds.length > 0) {
-            query = query.or(`title.ilike.%${q}%,company_id.in.(${matchingCompanyIds.join(',')})`);
+            query = query.or(`${searchFields},company_id.in.(${matchingCompanyIds.join(',')})`);
         } else {
-            query = query.ilike("title", `%${q}%`);
+            query = query.or(searchFields);
         }
     }
 
@@ -70,19 +74,14 @@ export default async function InternshipsPage({
 
         const profileMap = new Map(profilesData?.map(p => [p.id, p]) || []);
 
-        const now = new Date();
-        internships = internshipsData
-            .map(job => ({
-                ...job,
-                profiles: profileMap.get(job.company_id) || null
-            }))
-            .filter(job => {
-                if (job.expires_at) {
-                    const expiryDate = new Date(job.expires_at);
-                    return now <= expiryDate;
-                }
-                return true;
-            });
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+        internships = internshipsData.map(job => ({
+            ...job,
+            profiles: profileMap.get(job.company_id) || null,
+            isNew: new Date(job.created_at) >= sevenDaysAgo
+        }));
     }
 
     return (
@@ -119,9 +118,11 @@ export default async function InternshipsPage({
                                         Posted {new Date(job.created_at).toLocaleDateString()}
                                     </p>
                                 </div>
-                                <span className="inline-flex items-center rounded-full bg-green-500/10 px-2.5 py-0.5 text-xs font-medium text-green-500">
-                                    New
-                                </span>
+                                {job.isNew && (
+                                    <span className="inline-flex items-center rounded-full bg-green-500/10 px-2.5 py-0.5 text-xs font-medium text-green-500">
+                                        New
+                                    </span>
+                                )}
                             </div>
 
                             {/* Job Title */}

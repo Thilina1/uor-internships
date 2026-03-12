@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth/session";
 import Link from "next/link";
-import { ArrowLeft, User, Mail, Calendar, ExternalLink } from "lucide-react";
+import { ArrowLeft, User, Mail, Calendar, ExternalLink, FolderOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/app/dashboard/member/applicants/StatusBadgeComponent";
 
@@ -80,6 +80,24 @@ export default async function ApplicantsPage({
                     <p>profile fetch returned coords?: {applicants?.length || 0}</p>
                 </div>
             </div>
+            {job.drive_url && (
+                <div className="mb-10 p-6 rounded-3xl bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800/30 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-600">
+                            <FolderOpen className="h-6 w-6" />
+                        </div>
+                        <div>
+                            <h2 className="font-bold text-lg">Application Documents</h2>
+                            <p className="text-sm text-muted-foreground italic">All sync'd CVs and documents are stored in this Google Drive folder.</p>
+                        </div>
+                    </div>
+                    <a href={job.drive_url} target="_blank" rel="noopener noreferrer" className="w-full md:w-auto">
+                        <Button className="w-full md:w-auto gap-2 bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/20">
+                            <ExternalLink className="h-4 w-4" /> Open Drive Folder
+                        </Button>
+                    </a>
+                </div>
+            )}
 
             <div className="space-y-6">
                 {applicants && applicants.length > 0 ? (
