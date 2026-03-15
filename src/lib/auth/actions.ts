@@ -9,14 +9,11 @@ export async function registerUser(formData: any) {
     const supabase = await createClient();
     const { email, password, name, role } = formData;
 
-    // Hash password before storing
-    const hashedPassword = bcrypt.hashSync(password, 10);
-
     const { data, error } = await supabase
         .from("profiles")
         .insert({
             email,
-            password_hash: hashedPassword,
+            password_hash: password, // Supabase trigger hashes this automatically
             name,
             role,
         })
@@ -25,6 +22,9 @@ export async function registerUser(formData: any) {
 
     if (error) {
         console.error("Register Error:", error);
+        if (error.code === '23505' || error.message.includes('profiles_email_key')) {
+             return { error: "This email is already registered. Please log in or use a different email." };
+        }
         return { error: error.message };
     }
 
@@ -52,12 +52,11 @@ export async function loginUser(email: string, password: string) {
 
         if (!user) {
             // If no admin exists, create one
-            const hashedPassword = bcrypt.hashSync("Admin", 10);
             const { data: newAdmin, error: createError } = await supabase
                 .from("profiles")
                 .insert({
                     email: "admin@uor.lk",
-                    password_hash: hashedPassword,
+                    password_hash: "Admin", // Supabase trigger hashes this automatically
                     name: "Administrator",
                     role: "admin",
                 })
@@ -167,14 +166,11 @@ export async function resetPassword(token: string, password: string) {
         return { error: "Reset token has expired" };
     }
 
-    // 3. Hash new password
-    const hashedPassword = bcrypt.hashSync(password, 10);
-
-    // 4. Update user & clear token
+    // 3. Update user & clear token
     const { error: updateError } = await supabase
         .from("profiles")
         .update({
-            password_hash: hashedPassword,
+            password_hash: password, // Supabase trigger hashes this automatically
             reset_token: null,
             reset_token_expires_at: null,
         })

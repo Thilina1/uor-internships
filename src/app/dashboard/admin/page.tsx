@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Check, X, Briefcase, Clock, Building2 } from "lucide-react";
+import { Check, X, Briefcase, Clock, Building2, Users, MessageSquare } from "lucide-react";
 import { getUser } from "@/lib/auth/actions";
 import Link from "next/link";
 
@@ -103,8 +103,20 @@ export default function AdminDashboard() {
                         Review and approve internship posts from students and partners.
                     </p>
                 </div>
-                <div className="bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-bold">
-                    {pendingPosts.length} Pending
+                <div className="flex items-center gap-4">
+                    <Link href="/dashboard/admin/inquiries">
+                        <Button variant="outline" className="flex items-center gap-2">
+                            <MessageSquare className="h-4 w-4" /> Inquiries
+                        </Button>
+                    </Link>
+                    <Link href="/dashboard/admin/students">
+                        <Button variant="outline" className="flex items-center gap-2">
+                            <Users className="h-4 w-4" /> Student Directory
+                        </Button>
+                    </Link>
+                    <div className="bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-bold">
+                        {pendingPosts.length} Pending
+                    </div>
                 </div>
             </div>
 

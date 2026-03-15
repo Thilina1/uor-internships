@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Briefcase, Clock, CheckCircle, XCircle } from "lucide-react";
+import { Briefcase, Clock, CheckCircle, XCircle, User, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { getSession } from "@/lib/auth/session";
@@ -98,11 +98,21 @@ export default async function StudentDashboard() {
 
     return (
         <div className="container py-10 px-4 md:px-6">
-            <div className="mb-10">
-                <h1 className="text-3xl font-bold tracking-tight">Student Dashboard</h1>
-                <p className="text-muted-foreground mt-1">
-                    Welcome back, <span className="text-primary font-medium">{user.name}</span>. Track your applications and find new opportunities.
-                </p>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight">Student Dashboard</h1>
+                    <p className="text-muted-foreground mt-1">
+                        Welcome back, <span className="text-primary font-medium">{user.name}</span>. Track your applications and find new opportunities.
+                    </p>
+                </div>
+                <div className="flex gap-3">
+                    <Link href="/dashboard/student/inquiries">
+                        <Button variant="outline"><MessageSquare className="h-4 w-4 mr-2" /> My Inquiries</Button>
+                    </Link>
+                    <Link href="/dashboard/student/profile">
+                        <Button><User className="h-4 w-4 mr-2" /> Edit Profile</Button>
+                    </Link>
+                </div>
             </div>
 
             <div className="space-y-12">

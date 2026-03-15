@@ -10,6 +10,7 @@ create table if not exists public.profiles (
   role text check (role in ('student', 'alumni', 'lecturer', 'external', 'admin')) not null,
   name text,
   avatar_url text,
+  mobile_number text,
   reset_token text,
   reset_token_expires_at timestamp with time zone,
   updated_at timestamp with time zone default timezone('utc'::text, now())
@@ -167,3 +168,34 @@ create table if not exists public.saved_jobs (
 
 -- Turn off RLS for simplicity / custom auth
 alter table public.saved_jobs disable row level security;
+
+-- Create inquiries table
+create table if not exists public.inquiries (
+  id uuid default uuid_generate_v4() primary key,
+  student_id uuid references public.profiles(id) on delete cascade not null,
+  subject text not null,
+  message text not null,
+  status text default 'pending',
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Turn off RLS for inquiries for simplicity / custom auth
+alter table public.inquiries disable row level security;
+
+-- 4. Employment History Table
+create table if not exists public.employment_history (
+  id uuid default uuid_generate_v4() primary key,
+  student_id uuid references public.profiles(id) on delete cascade not null,
+  internship_id uuid references public.internships(id) on delete set null,
+  company_name text not null,
+  job_role text not null,
+  job_responsibilities text,
+  start_date date not null,
+  end_date date,
+  is_current boolean default true,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Turn off RLS for employment history for simplicity / custom auth
+alter table public.employment_history disable row level security;
+

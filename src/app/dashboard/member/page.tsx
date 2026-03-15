@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
-import { Plus, Briefcase, Users, Clock, ChevronLeft, ChevronRight, FolderOpen } from "lucide-react";
+import { Plus, Briefcase, Users, Clock, ChevronLeft, ChevronRight, FolderOpen, MessageSquare, UserCircle } from "lucide-react";
 
 import { getSession } from "@/lib/auth/session";
 
@@ -74,11 +74,32 @@ export default async function MemberDashboard({
                         Welcome back, <span className="text-primary font-medium">{user.name}</span>. Manage your internship listings and applicants.
                     </p>
                 </div>
-                <Link href="/dashboard/member/new">
-                    <Button className="flex items-center gap-2">
-                        <Plus className="h-4 w-4" /> Post New Internship
-                    </Button>
-                </Link>
+                <div className="flex flex-wrap gap-3">
+                    {user.role !== "alumni" && user.role !== "external" && (
+                        <>
+                            <Link href="/dashboard/member/inquiries">
+                                <Button variant="outline" className="flex items-center gap-2">
+                                    <MessageSquare className="h-4 w-4" /> Inquiries
+                                </Button>
+                            </Link>
+                            <Link href="/dashboard/member/students">
+                                <Button variant="outline" className="flex items-center gap-2">
+                                    <Users className="h-4 w-4" /> Student Directory
+                                </Button>
+                            </Link>
+                        </>
+                    )}
+                    <Link href="/dashboard/member/profile">
+                        <Button variant="outline" className="flex items-center gap-2">
+                            <UserCircle className="h-4 w-4" /> Edit Profile
+                        </Button>
+                    </Link>
+                    <Link href="/dashboard/member/new">
+                        <Button className="flex items-center gap-2">
+                            <Plus className="h-4 w-4" /> Post New Internship
+                        </Button>
+                    </Link>
+                </div>
             </div>
 
 

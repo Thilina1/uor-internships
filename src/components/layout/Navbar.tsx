@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
-import { User, LogOut, LayoutDashboard, Briefcase } from "lucide-react";
+import { User, LogOut, LayoutDashboard, Briefcase, MessageSquare } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 import { getUser, logoutUser } from "@/lib/auth/actions";
@@ -62,6 +62,22 @@ export function Navbar() {
                                         <Button variant="ghost" size="sm" className="gap-2">
                                             <LayoutDashboard className="h-4 w-4" />
                                             <span className="hidden sm:inline">Dashboard</span>
+                                        </Button>
+                                    </Link>
+                                )}
+                                {role === "admin" && (
+                                    <Link href="/dashboard/admin">
+                                        <Button variant="ghost" size="sm" className="gap-2">
+                                            <LayoutDashboard className="h-4 w-4" />
+                                            <span className="hidden sm:inline">Admin Dashboard</span>
+                                        </Button>
+                                    </Link>
+                                )}
+                                {role !== "student" && role !== "alumni" && role !== "external" && role !== "lecturer" && (
+                                    <Link href={role === "admin" ? "/dashboard/admin/inquiries" : "/dashboard/member/inquiries"}>
+                                        <Button variant="ghost" size="sm" className="gap-2">
+                                            <MessageSquare className="h-4 w-4" />
+                                            <span className="hidden sm:inline">Inquiries</span>
                                         </Button>
                                     </Link>
                                 )}

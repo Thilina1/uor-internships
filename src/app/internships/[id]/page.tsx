@@ -213,7 +213,7 @@ export default async function InternshipDetailsPage({
                                             </Button>
                                         </Link>
                                     )}
-                                    {userRole !== "admin" && (
+                                    {userRole === "student" && (
                                         job.external_url ? (
                                             <Link href={job.external_url} target="_blank" rel="noopener noreferrer" className="w-full">
                                                 <Button className="w-full h-14 text-lg bg-gradient-to-r from-[#01a9e0] to-blue-600 hover:shadow-lg hover:shadow-primary/20 transition-all text-white rounded-xl font-bold">
@@ -238,7 +238,7 @@ export default async function InternshipDetailsPage({
                                             )
                                         )
                                     )}
-                                    {userRole !== "admin" && (
+                                    {userRole === "student" && (
                                         <SaveJobButton
                                             internshipId={job.id}
                                             initialIsSaved={hasSaved}
@@ -247,7 +247,7 @@ export default async function InternshipDetailsPage({
                                     )}
                                 </div>
 
-                                {userRole !== "admin" && (
+                                {userRole === "student" && (
                                     <div className="bg-slate-50 dark:bg-muted/30 rounded-2xl p-6 border border-slate-100 dark:border-border">
                                         <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-4 text-center">
                                             Share this job and help your fellow undergraduates find the perfect opportunity!
